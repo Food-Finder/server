@@ -23,20 +23,22 @@ module.exports = class Nut {
     .catch(err=> console.log('err'))
   }
   static getRecipe (req,res) {
-    const foodName = req.params.q.trim().replace(' ','%20');
-    const url = `https://www.food2fork.com/api/search?key=proccess.env.F2FKEY&q=${foodName}&sort=r`
+    const foodName = req.query.q.trim().replace(' ','%20');
+    console.log(process.env.F2FAPPKEY);
+    const url = `https://www.food2fork.com/api/search?key=${process.env.F2FAPPKEY}&q=${foodName}&sort=r`
     axios({
       method:'GET',
       url
     })
-    .then(({recipes}) => {
-      let top10 = recipes.slice(0,10);
+    .then(({data: {recipes}}) => {
+      let top10= recipes.slice(0,10);
       res.status(200).json({
         message:'success',
         top10
       })
     })
     .catch(err => {
+      console.log(err)
       res.status(400).json({
         message: err
       })
