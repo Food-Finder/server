@@ -24,24 +24,29 @@ module.exports = class Nut {
   }
   static getRecipe (req,res) {
     const foodName = req.query.q.trim().replace(' ','%20');
-    console.log(process.env.F2FAPPKEY);
     const url = `https://www.food2fork.com/api/search?key=${process.env.F2FAPPKEY}&q=${foodName}&sort=r`
-    axios({
-      method:'GET',
-      url
-    })
-    .then(({data: {recipes}}) => {
-      let top10= recipes.slice(0,10);
-      res.status(200).json({
-        message:'success',
-        top10
-      })
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(400).json({
-        message: err
-      })
-    })
+    var request = require('request');
+    
+    var options = {
+      headers: {
+        'User-Agent': 'request'
+      },
+      url,
+      method: "GET"
+    };
+    
+    function callback(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        let top10 = JSON.parse(response.body).recipes.slice(0,9);
+        res.status(200).json({
+          top10
+        })
+      } else {
+        res.status(400).json({
+          message: error
+        })
+      }
+    }
+    request(options, callback);
   }
 }
