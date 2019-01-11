@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const cors = require('cors')
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/food-finder');
@@ -11,13 +12,16 @@ db.once('open', function() {
 });
 
 var userRouter = require('./routes/user');
+const foodRouter = require('./routes/food')
 
 var app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/user', userRouter);
+app.use('/food', foodRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
