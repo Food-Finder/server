@@ -8,8 +8,8 @@ axios.defaults.headers.post['Accept'] = 'application/json';
 class FoodController {
   static async getCategories(req, res) {
     try {
-      let response = await axios.get('/categories')      
-      res.status(200).json(response.data)      
+      let response = await axios.get('/categories')
+      res.status(200).json(response.data)
     } catch (error) {
       res.status(500).json(error)
     }
